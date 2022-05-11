@@ -21,7 +21,7 @@ namespace StendenCafe.Controllers
             this.tokenHelper = tokenHelper;
         }
 
-        [HttpPost("register")]
+        [HttpPost]
         public async Task<ActionResult> Register([FromForm] CafeUser newUser)
         {
             await userRepository.Add(newUser);

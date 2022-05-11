@@ -17,7 +17,11 @@ namespace StendenCafe.Authentication
             var userId = tokenHelper.ValidateToken(token);
 
             if (userId != null)
-                context.Items["User"] = userRepository.GetById(userId);
+            {
+                var user = await userRepository.GetById(userId);
+                context.Items["User"] = user;
+            }
+
 
             await _next(context);
         }
