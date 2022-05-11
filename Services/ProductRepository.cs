@@ -36,15 +36,26 @@ namespace StendenCafe.Services
 																new { id });
 		}
 
+		public async Task<IEnumerable<Product>> Get(int[] ids)
+        {
+			using var connection = Connect();
+
+			return await connection.QueryAsync<Product>(@"SELECT *
+														  FROM Product
+															INNER JOIN Category
+																ON Product.CategoryId = Category.Id
+															Where Product.Id = (@ids)", ids);
+        }
+
 		public async Task<Product> Add(Product product)
 		{
 			using var connection = Connect();
 
 			return await connection.QuerySingleAsync<Product>(@"INSERT INTO Product (Name, CategoryId, Price)
-												VALUES (@Name, @CategoryId, @Price);
-												SELECT * FROM Product
-												WHERE Id = LAST_INSERT_ID()",
-												product);
+																VALUES (@Name, @CategoryId, @Price);
+																SELECT * FROM Product
+																WHERE Id = LAST_INSERT_ID()",
+																product);
 		}
 
 		public async Task Delete (int id)

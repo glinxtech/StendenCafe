@@ -1,9 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StendenCafe.Services;
 using StendenCafe.Models;
+using System.Collections.Generic;
+using System.Linq;
+using StendenCafe.Authentication;
 
 namespace StendenCafe.Controllers
 {
+    [Authorize]
     public class ProductController : MyControllerBase
     {
         private readonly ProductRepository productRepo;
