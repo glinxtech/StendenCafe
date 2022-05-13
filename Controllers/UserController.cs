@@ -12,35 +12,27 @@ namespace StendenCafe.Controllers
 {
     public class UserController : MyControllerBase
     {
-        private readonly UserRepository userRepository;
-        private readonly TokenHelper tokenHelper;
+        private readonly UserRepository UserRepository;
         
-        public UserController(UserRepository userRepository, TokenHelper tokenHelper)
+        public UserController(UserRepository userRepository)
         {
-            this.userRepository = userRepository;
-            this.tokenHelper = tokenHelper;
+            UserRepository = userRepository;
         }
 
         [HttpPost]
-        public async Task<ActionResult> Register([FromForm] CafeUser newUser)
+        public async Task<ActionResult> Register([FromBody] CafeUser newUser)
         {
-            await userRepository.Add(newUser);
-
+            await UserRepository.Add(newUser);
             return StatusCode(201);
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult> Login([FromForm] CafeUser login)
+        public async Task<ActionResult> Login([FromBody] CafeUser login)
         {
-            var userId = await userRepository.Verify(login);
-
-            if (userId == null)
-                return BadRequest(new { message = "Username or password is incorrect" });
-
-            var token = tokenHelper.GenerateToken(userId);
-
+            var userId = await UserRepository.Verify(login);
+            if (userId == null) return BadRequest(new { message = "Username or password is incorrect" });
+            var token = TokenHelper.GenerateToken(userId);
             return Ok(new { Token = token });
-            
         }
     }
 }

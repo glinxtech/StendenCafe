@@ -11,10 +11,10 @@ namespace StendenCafe.Authentication
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context, UserRepository userRepository, TokenHelper tokenHelper)
+        public async Task Invoke(HttpContext context, UserRepository userRepository)
         {
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-            var userId = tokenHelper.ValidateToken(token);
+            var userId = TokenHelper.ValidateToken(token);
 
             if (userId != null)
             {

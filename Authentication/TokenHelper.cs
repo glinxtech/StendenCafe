@@ -8,14 +8,14 @@ using System.Collections.Generic;
 
 namespace StendenCafe.Authentication
 {
-    public class TokenHelper
+    public static class TokenHelper
     {
-        private readonly string secret = "i_suck_at_this_1q2w3e4r!@";
+        private static readonly string Secret = "i_suck_at_this_1q2w3e4r!@";
 
-        public string GenerateToken(string id)
+        public static string GenerateToken(string id)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(secret);
+            var key = Encoding.ASCII.GetBytes(Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] { new Claim("id", id) }),
@@ -26,13 +26,11 @@ namespace StendenCafe.Authentication
             return tokenHandler.WriteToken(token);
         }
 
-        public string? ValidateToken(string token)
+        public static string? ValidateToken(string token)
         {
-            if (token == null)
-                return null;
-
+            if (token == null) return null;
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(secret);
+            var key = Encoding.ASCII.GetBytes(Secret);
             try
             {
                 var jwtToken = tokenHandler.ValidateToken(token, new TokenValidationParameters
@@ -41,12 +39,10 @@ namespace StendenCafe.Authentication
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = false,
                     ValidateAudience = false,
-
                     ClockSkew = TimeSpan.Zero
                 }, out SecurityToken validatedToken);
 
                 var userId = jwtToken.Claims.First(x => x.Type == "id").Value;
-
                 return userId;
             }
             catch

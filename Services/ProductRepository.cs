@@ -30,8 +30,6 @@ namespace StendenCafe.Services
 
 			return await connection.QuerySingleAsync<Product>(@"SELECT * 
 																FROM Product
-																	INNER JOIN Category 
-																		ON Product.CategoryId = Category.Id
 																WHERE Product.Id = @id", 
 																new { id });
 		}
@@ -68,14 +66,16 @@ namespace StendenCafe.Services
 		public async Task<Product> Update (Product product)
 		{
 			using var connection = Connect();
-
-			return await connection.QuerySingleAsync<Product>(@"UPDATE Product SET
-																	Name = @Name,
-																	CategoryId = @CategoryId,
-																	Price = @Price
-																WHERE Id = @id
-																SELECT * FROM product WHERE Id = @Id", 
-																product);
+			return await connection.QuerySingleAsync<Product>(
+				@"
+					UPDATE Product
+					SET
+						Name = @Name,
+						CategoryId = @CategoryId,
+						Price = @Price
+					WHERE Id = @id;
+					SELECT * FROM product WHERE Id = @Id", 
+					product);
 		}
 	}
 }
