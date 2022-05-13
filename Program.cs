@@ -1,4 +1,5 @@
 using StendenCafe.Services;
+using StendenCafe.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,8 +10,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//builder.Services.AddScoped<TokenHelper>();
 builder.Services.AddScoped<ProductRepository>();
 builder.Services.AddScoped<CategoryRepository>();
+builder.Services.AddScoped<UserRepository>();
+
 
 var app = builder.Build();
 
@@ -21,9 +25,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseMiddleware<TokenMiddleware>();
 
 app.MapControllers();
 

@@ -52,9 +52,10 @@ namespace StendenCafe.Services
 		{
 			using var connection = Connect();
 
-			return await connection.QuerySingleAsync<Category>(@"UPDATE Category SET
-																	Name = @Name,
-																WHERE Id = @id
+			return await connection.QuerySingleAsync<Category>(@"UPDATE Category 
+																SET
+																	Name = @Name
+																WHERE Id = @id;
 																SELECT * FROM Category WHERE Id = @Id", 
 																category);
 		}
